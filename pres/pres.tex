@@ -59,27 +59,137 @@ The University of Oklahoma \\ % Your institution for the title page
 \section{Introduction} 
 %------------------------------------------------
 \subsection{What is the problem?}
+
+
+
 \begin{frame}
-\frametitle{What is the problem?}
-$
-P(\alpha) = \prod_{x \in \alpha} \mathcal{V}(x)
-$
+\frametitle{Goal}
+Ultimate goal: given a cipher text $c$ recover the password $k$ such that $H(k) = c$
 \end{frame}
 
+
+
+
+\subsection{Previous Work}
+\begin{frame}
+\frametitle{Time-Space Tradeoff}
+
+
+
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+\column{.30\textwidth} % Left column and width
+Full look up table \\
+\begin{block}{Time}
+$O(1)$
+\end{block}
+
+\begin{block}{Space}
+$O(\lvert \mathcal{K} \rvert)$
+\end{block}
+\column{.30\textwidth} % Right column and width
+?????
+
+
+\column{.30\textwidth} % Right column and width
+Brute-force attack \\
+\begin{block}{Time}
+$O(\lvert \mathcal{K} \rvert)$
+\end{block}
+
+\begin{block}{Space}
+$O(1)$
+\end{block}
+
+\end{columns}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Time-Space Tradeoff}
+\begin{columns}[c]
+\column{.50\textwidth}
+In 1980 Martin Hellman answes this question by contributing a Time-Space tradeoff for the problem of cryptanalysis.
+\begin{itemize}
+\item Precompute: $m$ ``chains'' of length $t$
+\item Store only the first and last items in each chain
+\end{itemize}
+\column{.45\textwidth}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{figs/classic}
+%\caption{Convergence vs reduction in Keyspace size ($|\mathcal{K}|$) for 8-character sequences}
+\end{figure}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Chain Generation}
+\begin{columns}[c]
+\column{.50\textwidth}
+The function $f(k)$ maps from one key to another. Where:
+\begin{equation*}
+f(k) = R[H(k)]
+\end{equation*}
+\begin{where}
+\item $H(k)$ is a hash function that maps from key $k$ to ciphertext $c$
+\item $R(c)$ is a Reduction function mapping from a ciphertext $c$ back to a value $k \in \mathcal{K}$
+\item Example reduction function: drop last n characters/bits
+\end{where}
+\column{.45\textwidth}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{figs/classic}
+%\caption{Convergence vs reduction in Keyspace size ($|\mathcal{K}|$) for 8-character sequences}
+\end{figure}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Chain Generation}
+\begin{columns}[c]
+\column{.50\textwidth}
+\begin{example}[Chain Generation]
+4-character passwords \\
+6-character password sets
+\begin{align*}
+pass & \rightarrow^H FE4gT6 \rightarrow^R ofie \rightarrow^H \\ & FP03u2 \rightarrow^R ueyf \dotsb \rightarrow^R lswq
+\end{align*}
+\end{example}
+\column{.45\textwidth}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{figs/classic}
+%\caption{Convergence vs reduction in Keyspace size ($|\mathcal{K}|$) for 8-character sequences}
+\end{figure}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Key Recovery}
+\begin{columns}[c]
+\column{.50\textwidth}
+Given a cipher text $c$ we need to recover the key $k$ that generates the ciphertext
+\begin{equation*}
+c = H(k)
+\end{equation*}
+
+
+\column{.45\textwidth}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{figs/classic}
+%\caption{Convergence vs reduction in Keyspace size ($|\mathcal{K}|$) for 8-character sequences}
+\end{figure}
+\end{columns}
+\end{frame}
 
 
 \subsection{Dictionary Attacks}
 \begin{frame}
 \frametitle{Dictionary Attacks}
-\end{frame}
-
-\subsection{Previous Work}
-\begin{frame}
-\frametitle{Helman}
-\end{frame}
-
-\begin{frame}
-\frametitle{Rainbow}
 \end{frame}
 
 %------------------------------------------------
