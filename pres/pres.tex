@@ -58,8 +58,42 @@ The University of Oklahoma \\ % Your institution for the title page
 %------------------------------------------------
 \section{Introduction} 
 %------------------------------------------------
-\subsection{What is the problem?}
+\subsection{Introduction}
 
+
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+\item Humans tend to generate passwords that are easy to remember
+\item Common defense: \emph{composition rules} require passwords to include digits and special characters
+\item Even with the addition of digits and special characters, Humans are not too random
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+\item Consider a string ``abababababababab'' 16 characters long
+\item Although the string is long and hard to brute-force, is is not very random
+\item This can be modeled by the \emph{Kolmogrov conplexity} (K-Complexity)
+\begin{itemize}
+\item Kolmogrov complexity: The length of the shortest Turing Machine that outputs a string and then haults
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+\item Itterate over all strings with K-Complexity $\leq$ some threshold
+\item Can't be done
+\begin{itemize}
+\item K-Complexity is uncomputable
+\item Human randomness is different than computational randomness
+\end{itemize}
+\item Solution: Use techniques from natural language processing, such as ``Markovian Filters'' to generate strings that are phonetically simmilar to the users natural language
+\end{itemize}
+\end{frame}
 
 
 \begin{frame}
@@ -67,10 +101,7 @@ The University of Oklahoma \\ % Your institution for the title page
 Ultimate goal: given a cipher text $c$ recover the password $k$ such that $H(k) = c$
 \end{frame}
 
-
-
-
-\subsection{Previous Work}
+\subsection{Time-Space Tradeoff}
 \begin{frame}
 \frametitle{Time-Space Tradeoff}
 
@@ -99,10 +130,7 @@ $O(\lvert \mathcal{K} \rvert)$
 \begin{block}{Space}
 $O(1)$
 \end{block}
-
 \end{columns}
-
-
 \end{frame}
 
 
@@ -172,12 +200,31 @@ pass & \rightarrow^H FE4gT6 \rightarrow^R ofie \rightarrow^H \\ & FP03u2 \righta
 \frametitle{Key Recovery}
 \begin{columns}[c]
 \column{.50\textwidth}
-Given a cipher text $c$ we need to recover the key $k$ that generates the ciphertext
-\begin{equation*}
-c = H(k)
-\end{equation*}
+\begin{itemize}
+\item Given any cipher text $c$, use the reduction function $R$ to generate a key $k_i$
+\item Generate a new chain of length $t$ (where $t$ is the length of chains in the stored table)
+\item Search the \emph{last} elements of the precomputed table for every key generated from the given ciphertext $c$
+\end{itemize}
+\column{.45\textwidth}
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{figs/classic}
+%\caption{Convergence vs reduction in Keyspace size ($|\mathcal{K}|$) for 8-character sequences}
+\end{figure}
+\end{columns}
+\end{frame}
 
+\begin{frame}
+\frametitle{Key Recovery}
+\begin{columns}[c]
+\column{.50\textwidth}
+\begin{itemize}
+\item Because we found the chain our ciphertext belongs to, we can recover the key that generates the ciphertext
+\item Time-Space Tradeoff comes from the length of the chains
+\end{itemize}
 
+\begin{example}[On Board]
+
+\end{example}
 \column{.45\textwidth}
 \begin{figure}
 \includegraphics[width=0.9\linewidth]{figs/classic}
@@ -187,9 +234,35 @@ c = H(k)
 \end{frame}
 
 
-\subsection{Dictionary Attacks}
 \begin{frame}
-\frametitle{Dictionary Attacks}
+\frametitle{Problem}
+Chains can merge. The reduction function can produce the same key for two different ciphertexts
+\begin{itemize}
+\item If the merge happens early in the chain generation, the table will not cover as many passwords
+\item Hard to detect because the chains will still have different end points (Unless the merge happens at the same position in the two chains)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Solution}
+\textbf{Rainbow Tables}
+\begin{itemize}
+\item Use different related reduction functions $R_1$ to $R_n$ where $n$ is the length of the chain
+\item If a collision happens, It has to be at the same position in chain generation and collisions can be detected
+\item Key recovery changes because we are using a different reduction function each time.
+\begin{itemize}
+\item assume generate chain starting at position $n-1$ use reduction function $R_{n-1}$ and move backwards through the chain
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Smart Dictionary Attack}
+\begin{frame}
+\frametitle{Smart Dictionary Attacks}
+\begin{itemize}
+\item Rainbow tables and the classical space-time tradeoff make \textbf{no assumptions} about the keyspace other than its size
+\item Narayanan and Shmatikov use Markov chains and Regular expressions to make some assumptions about the keyspace. This means that we can search only a ``smart'' portion of the keyspace.
+\end{itemize}
 \end{frame}
 
 %------------------------------------------------
@@ -370,27 +443,107 @@ Where
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Partial Dictionary}
+Define a partial dictionary $\mathcal{D}_{\mathcal{V},\theta,\ell,\theta^\prime,\ell^\prime}$ as follows:
+\begin{itemize}
+\item let $\alpha$ be a string such that $\lvert \alpha \rvert = \ell^\prime$
+\item $\prod_{x \in \alpha}\mathcal{V}(x)=\theta^\prime$ 
+\end{itemize} 
+Then
+\begin{equation*}
+\mathcal{D}_{\mathcal{V},\theta,\ell,\theta^\prime,\ell^\prime} = \lbrace \beta : \alpha \beta \in \mathcal{D}_{\mathcal{V},\theta,\ell} \rbrace
+\end{equation*}
+\end{frame}
+
 \begin{frame}
 \frametitle{Zero-Order Markovian Dictionary}
+Precompute the size of a partial dictionary (recursively) and store in a 2D-array of size ($\ell$ , \texttt{num\_levels}) \\
+\begin{equation*}
+\lvert \mathcal{D}_{\mathcal{V},threshold, total\_length, level, current\_length} \rvert
+\end{equation*}
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Zero-Order Markovian Dictionary}
+\begin{verbatim}
+partial_size1(current_length, level)
+{
+    if level >= threshold: return 0
+    if total_length = current_length: return 1
+    sum = 0
+    for each char in alphabet
+        sum = sum + partial_size1(current_length+1, 
+                                    level+mu(char))
+    return sum
+}
+\end{verbatim}
+Complexity linear in the product of total length, number of characters in alphabet, and number of levels
+\end{frame}
+
+\begin{frame}
+\frametitle{Zero-Order Markovian Dictionary}
+\begin{itemize}
+\item For cryptanalysis, given an index $i$ produce the corresponding key $k$ in the dictionary $\mathcal{D}$
+\item Use precomputed partial size to determine the first character by looking up a value from the precomputed matrix.
+\begin{itemize}
+\item Adjust the index to a new index relative to the first character
+\item Adjust the threshold based on the frequency of the first character
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Zero-Order Markovian Dictionary}
+Initally call \texttt{get\_key1(0,0)}
+\begin{verbatim}
+get_key1(current_length, index, level)
+{
+    if total_length = current_length: return ""
+    sum = 0
+    for each char in alphabet
+        new_level = level + mu(char)
+        // looked up from precomputed array
+        size = partial_size1[
+            current_length+1][new_level]
+        if sum + size > index
+            return char + get_key1(
+                current_length+1,
+                index-sum, new_level)
+        sum = sum + size
+}
+\end{verbatim}
+\end{frame}
+
 \begin{frame}
 \frametitle{First-Order Markovian Dictionary}
+Same as zero order only in get\_key, we need to keep track of the last character
 \end{frame}
+
 \begin{frame}
 \frametitle{DFA Dictionary}
+Similar to zero-order Markov dictionary except instead of a threshold and levels, we have states and transitions
 \end{frame}
+
 \begin{frame}
 \frametitle{Any Keyspace $\mathcal{K}$}
+Assume that we have a superspace $\mathcal{K}^\prime \supset \mathcal{K}$ ad we need to decide that given $\alpha \in \mathcal{K}^\prime$ if $\alpha \in \mathcal{K}$ \\
+Split $\matcal{K}^\prime$ into $m$ bins of size $t$ and precompute the number of members in each bin that are in $\matcal{K}$ \\
+Given an index, quickly figuew out what bin it falls into and interate over all keys in that bin and test each one for membership \\
+$O(\lvert \matcal{K}^\prime \rvert)$ precomputation time 
+... storage and index
 \end{frame}
+
 \begin{frame}
 \frametitle{Hybrid Markovian/DFA}
 \end{frame}
+
 \begin{frame}
 \frametitle{Multiple Keyspaces}
 \end{frame}
-\begin{frame}
-\frametitle{Optimizations}
-\end{frame}
+
 
 %------------------------------------------------
 \section{Experiment} 

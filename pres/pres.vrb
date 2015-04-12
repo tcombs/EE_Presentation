@@ -1,4 +1,19 @@
-\frametitle{Citation}
-An example of the \verb|\cite| command to cite within the presentation:\\~
-
-This statement requires citation \cite{p1}.
+\frametitle{Zero-Order Markovian Dictionary}
+Initally call \texttt{get\_key1(0,0)}
+\begin{verbatim}
+get_key1(current_length, index, level)
+{
+    if total_length = current_length: return ""
+    sum = 0
+    for each char in alphabet
+        new_level = level + mu(char)
+        // looked up from precomputed array
+        size = partial_size1[
+            current_length+1][new_level]
+        if sum + size > index
+            return char + get_key1(
+                current_length+1,
+                index-sum, new_level)
+        sum = sum + size
+}
+\end{verbatim}
