@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1428788212 "pres.tex" "pres.pdf" "pres" 1428788229
+["pdflatex"] 1428788212 "pres.tex" "pres.pdf" "pres" 1428848803
   "/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii" 1337017135 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2014/texmf-dist/tex/generic/ifxetex/ifxetex.sty" 1284331290 1458 43ab4710dc82f3edeabecd0d099626b2 ""
   "/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/atbegshi.sty" 1335995445 24460 92f559a71aac869021852c227c704b38 ""
@@ -151,10 +151,10 @@
   "pres.tex" 1428788209 11766 6e7bee6c34b42c0236f4f457f524880f ""
   "pres.toc" 1428788226 616 9b5f3be9339225358c4e1bff5db990fe ""
   (generated)
-  "pres.pdf"
+  "pres.aux"
+  "pres.out"
   "pres.nav"
+  "pres.pdf"
+  "pres.log"
   "pres.vrb"
   "pres.toc"
-  "pres.out"
-  "pres.log"
-  "pres.aux"
